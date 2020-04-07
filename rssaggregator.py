@@ -7,7 +7,7 @@ import json
 import sys
 import creds
 
-url = creds.news_bot  # from local creds module
+discordurl = creds.news_bot  # from local creds module
 feedurl = "https://classic.wowhead.com/news/rss/classic"
 
 
@@ -27,10 +27,11 @@ def parse(feedurl):
     for entry in thefeed.entries:
         published_time = entry.get("published_parsed", entry.published_parsed)
         timenow = time.localtime()
-        # checks if it has been published in the last 24 hours
+        # Converts elapsed time since article was published to an hourly format
         timecheck = (
             (time.mktime(timenow) - time.mktime(published_time)) / 60 / 60
         )
+        # Check if article has been published in the last hour
         if timecheck < 1:
             # Remove html formatting from description for readability
             description = entry.get("description", "").split("<")[0]
@@ -60,7 +61,7 @@ def post_to_discord(article):
     data["embeds"].append(embed)
 
     result = requests.post(
-        url,
+        discordurl,
         data=json.dumps(data),
         headers={"Content-Type": "application/json"},
     )
