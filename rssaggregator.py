@@ -71,14 +71,8 @@ def post_to_discord(article):
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
-            print(err)
             syslog.syslog(syslog.LOG_INFO, err)
         else:
-            print(
-                "Posted successfully to {}, code {}.".format(
-                    server["Name"], result.status_code
-                )
-            )
             syslog.syslog(
                 syslog.LOG_INFO,
                 "Posted successfully to {}, code {}.".format(
