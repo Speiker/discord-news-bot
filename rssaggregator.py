@@ -5,6 +5,7 @@ import time
 import requests
 import json
 import sys
+import syslog
 import creds
 
 discords = creds.news_bot  # from local creds module
@@ -71,11 +72,18 @@ def post_to_discord(article):
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
             print(err)
+            syslog.syslog(syslog.LOG_INFO, err)
         else:
             print(
                 "Posted successfully to {}, code {}.".format(
                     server["Name"], result.status_code
                 )
+            )
+            syslog.syslog(
+                syslog.LOG_INFO,
+                "Posted successfully to {}, code {}.".format(
+                    server["Name"], result.status_code
+                ),
             )
 
 
