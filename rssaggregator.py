@@ -7,7 +7,7 @@ import json
 import sys
 import creds
 
-discordurl = creds.news_bot  # from local creds module
+discords = creds.news_bot  # from local creds module
 feedurl = "https://classic.wowhead.com/news/rss/classic"
 
 
@@ -60,18 +60,23 @@ def post_to_discord(article):
     embed["description"] = article["Description"]
     data["embeds"].append(embed)
 
-    result = requests.post(
-        discordurl,
-        data=json.dumps(data),
-        headers={"Content-Type": "application/json"},
-    )
+    for server in discords:
+        result = requests.post(
+            server["Webhook"],
+            data=json.dumps(data),
+            headers={"Content-Type": "application/json"},
+        )
 
-    try:
-        result.raise_for_status()
-    except requests.exceptions.HTTPError as err:
-        print(err)
-    else:
-        print("Posted successfully, code {}.".format(result.status_code))
+        try:
+            result.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            print(err)
+        else:
+            print(
+                "Posted successfully to {}, code {}.".format(
+                    server["Name"], result.status_code
+                )
+            )
 
 
 if __name__ == "__main__":
