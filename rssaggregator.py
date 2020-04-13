@@ -12,7 +12,7 @@ discords = creds.news_bot  # from local creds module
 feedurl = "https://classic.wowhead.com/news/rss/classic"
 
 
-def main(feedurl):
+def main():
     new_articles = parse(feedurl)
     if len(new_articles["Articles"]) > 0:
         for article in new_articles["Articles"]:
@@ -71,7 +71,7 @@ def post_to_discord(article):
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
-            syslog.syslog(syslog.LOG_INFO, err)
+            syslog.syslog(syslog.LOG_ERR, err)
         else:
             syslog.syslog(
                 syslog.LOG_INFO,
@@ -82,4 +82,4 @@ def post_to_discord(article):
 
 
 if __name__ == "__main__":
-    main(feedurl)
+    main()
