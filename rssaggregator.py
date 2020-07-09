@@ -25,7 +25,7 @@ def parse(feedurl):
     feed = thefeed.feed.get("title", "")
     articles = []
 
-    timenow = time.gmtime
+    timenow = time.gmtime()
     for entry in thefeed.entries:
         published_time = entry.get("published_parsed", entry.published_parsed)
         # Converts elapsed time since article was published to a minute format
