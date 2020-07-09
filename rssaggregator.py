@@ -25,13 +25,11 @@ def parse(feedurl):
     feed = thefeed.feed.get("title", "")
     articles = []
 
-    timenow = time.gmtime()
+    timenow = time.gmtime
     for entry in thefeed.entries:
         published_time = entry.get("published_parsed", entry.published_parsed)
         # Converts elapsed time since article was published to a minute format
-        timecheck = (
-            (time.mktime(timenow) - time.mktime(published_time)) / 60 / 60 / 60
-        )
+        timecheck = (time.mktime(timenow) - time.mktime(published_time)) / 60
         # Check if article has been published in the last minute
         if timecheck < 1:
             # Remove html formatting from description for readability
