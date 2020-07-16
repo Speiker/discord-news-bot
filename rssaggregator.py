@@ -31,7 +31,7 @@ def parse(feedurl):
         # Converts elapsed time since article was published to a minute format
         timecheck = (time.mktime(timenow) - time.mktime(published_time)) / 60
         # Check if article has been published in the last minute
-        if timecheck < 1:
+        if timecheck < 2:
             # Remove html formatting from description for readability
             description = entry.get("description", "").split("<")[0]
             articles.append(
