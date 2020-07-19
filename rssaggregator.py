@@ -13,13 +13,13 @@ feedurl = "https://classic.wowhead.com/news/rss/classic"
 
 
 def main():
-    new_articles = parse(feedurl)
+    new_articles = parse()
     if len(new_articles["Articles"]) > 0:
         for article in new_articles["Articles"]:
             post_to_discord(article)
 
 
-def parse(feedurl):
+def parse():
     thefeed = feedparser.parse(feedurl)
 
     feed = thefeed.feed.get("title", "")
@@ -28,10 +28,12 @@ def parse(feedurl):
     timenow = time.gmtime()
     for entry in thefeed.entries:
         published_time = entry.get("published_parsed", entry.published_parsed)
-        # Converts elapsed time since article was published to a minute format
-        timecheck = (time.mktime(timenow) - time.mktime(published_time)) / 60
-        # Check if article has been published in the last minute
-        if timecheck < 2:
+        # Converts elapsed time since article was published to an hourly format
+        timecheck = (
+            (time.mktime(timenow) - time.mktime(published_time)) / 60 / 60
+        )
+        # Check if article has been published in the last hour
+        if timecheck < 1:
             # Remove html formatting from description for readability
             description = entry.get("description", "").split("<")[0]
             articles.append(
